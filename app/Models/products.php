@@ -190,4 +190,3 @@ class products extends Model
         return round(max($price - $this->resolveDiscountAmount($price, $at), 0), 2);
     }
 }
-
