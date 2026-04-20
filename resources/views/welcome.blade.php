@@ -1,4 +1,10 @@
 @php
+    try {
+        \Illuminate\Support\Facades\DB::connection()->getPdo();
+    } catch (\Exception $e) {
+        throw new \Exception('Database connection failed: ' . $e->getMessage());
+    }
+
     $page = trans('welcome');
     $featureCards = $page['feature_cards'];
     $latestUpdates = $page['latest_updates']['items'];

@@ -4,7 +4,13 @@
     "type": "project",
     "require": {
         "php": "^8.2",
-        "laravel/framework": "^11.0 || ^12.0"
+        "cloudinary-labs/cloudinary-laravel": "^3.0",
+        "laravel/framework": "^11.0 || ^12.0",
+        "laravel/pail": "1.2",
+        "laravel/sail": "^1.57",
+        "laravel/sanctum": "^4.3",
+        "laravel/tinker": "^3.0",
+        "nunomaduro/collision": "^8.9"
     },
     "autoload": {
         "psr-4": {
