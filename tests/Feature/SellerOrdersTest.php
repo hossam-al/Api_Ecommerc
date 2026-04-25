@@ -7,7 +7,7 @@ use App\Models\OrderItem;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\brands;
-use App\Models\category;
+use App\Models\Category;
 use App\Models\product_variants;
 use App\Models\products;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -29,7 +29,7 @@ class SellerOrdersTest extends TestCase
 
     protected function createCategory(): category
     {
-        return category::create([
+        return Category::create([
             'name_en' => 'Orders Category ' . fake()->unique()->word(),
             'name_ar' => 'فئة الطلبات ' . fake()->unique()->word(),
             'description_en' => 'Orders',

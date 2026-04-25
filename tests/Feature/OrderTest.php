@@ -3,10 +3,10 @@
 namespace Tests\Feature;
 
 use App\Models\Order;
-use App\Models\Products;
+use App\Models\products;
 use App\Models\Role;
 use App\Models\User;
-use App\Models\category;
+use App\Models\Category;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
@@ -19,14 +19,14 @@ class OrderTest extends TestCase
     private function createProductsWithCategory()
     {
         // إنشاء تصنيف
-        $category = category::create([
+        $category = Category::create([
             'name' => 'Electronics',
             'description' => 'Electronic devices',
             'is_active' => true
         ]);
 
         // إنشاء منتجات
-        $product1 = Products::create([
+        $product1 = products::create([
             'name' => 'Smartphone',
             'description' => 'Latest smartphone',
             'price' => 999.99,
@@ -35,7 +35,7 @@ class OrderTest extends TestCase
             'category_id' => $category->id
         ]);
 
-        $product2 = Products::create([
+        $product2 = products::create([
             'name' => 'Laptop',
             'description' => 'Powerful laptop',
             'price' => 1499.99,

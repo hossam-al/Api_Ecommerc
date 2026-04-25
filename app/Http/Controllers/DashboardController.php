@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\brands;
-use App\Models\category;
+use App\Models\Category;
 use App\Models\Order;
 use App\Models\products;
 use App\Models\User;
@@ -72,7 +72,7 @@ class DashboardController extends Controller
             'orders_count' => Order::count(),
             'products_count' => products::count(),
             'users_count' => User::count(),
-            'categories_count' => category::count(),
+            'categories_count' => Category::count(),
             'orders_growth' => $this->getGrowthPercentage(Order::class),
             'products_growth' => $this->getGrowthPercentage(products::class),
             'users_growth' => $this->getGrowthPercentage(User::class),
@@ -105,7 +105,7 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
-        $top_categories = category::withCount('products')
+        $top_categories = Category::withCount('products')
             ->orderBy('products_count', 'desc')
             ->take(5)
             ->get();
@@ -170,7 +170,7 @@ class DashboardController extends Controller
             ->orderByDesc('created_at')
             ->paginate(10);
 
-        $categories = category::orderBy('name_ar')->get();
+        $categories = Category::orderBy('name_ar')->get();
         $brands = brands::orderBy('name_ar')->get();
 
         $apiToken = $user->createToken('dashboard-products')->plainTextToken;
@@ -301,7 +301,7 @@ class DashboardController extends Controller
     {
         $user = $this->ensureOwner();
 
-        $categories = category::orderByDesc('created_at')->paginate(10);
+        $categories = Category::orderByDesc('created_at')->paginate(10);
         $apiToken = $user->createToken('dashboard-categories')->plainTextToken;
 
         return view('dashboard.categories.index', [
@@ -323,7 +323,7 @@ class DashboardController extends Controller
             'is_active' => 'sometimes|boolean',
         ]);
 
-        category::create([
+        Category::create([
             'name_en' => $request->name_en,
             'name_ar' => $request->name_ar,
             'description_en' => $request->description_en,

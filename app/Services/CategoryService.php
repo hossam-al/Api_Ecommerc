@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\category;
+use App\Models\Category;
 use App\Models\User;
 use App\Support\ApiResponseBuilder;
 use Illuminate\Http\Request;
@@ -16,7 +16,7 @@ class CategoryService
 
     public function index(Request $request): array
     {
-        $query = category::query();
+        $query = Category::query();
 
         if ($request->filled('search')) {
             $search = $request->string('search')->toString();
@@ -47,7 +47,7 @@ class CategoryService
             return ApiResponseBuilder::error('Only the Owner can create categories', 403);
         }
 
-        $category = category::create([
+        $category = Category::create([
             'name_en' => $validated['name_en'],
             'name_ar' => $validated['name_ar'],
             'description_en' => $validated['description_en'] ?? null,
@@ -61,7 +61,7 @@ class CategoryService
 
     public function show(int|string $id): array
     {
-        $category = category::find($id);
+        $category = Category::find($id);
 
         if (!$category) {
             return ApiResponseBuilder::error('Category not found', 404);
@@ -76,7 +76,7 @@ class CategoryService
             return ApiResponseBuilder::error('Only the Owner can update categories', 403);
         }
 
-        $category = category::find($id);
+        $category = Category::find($id);
 
         if (!$category) {
             return ApiResponseBuilder::error('Category not found', 404);
@@ -102,7 +102,7 @@ class CategoryService
             return ApiResponseBuilder::error('Only the Owner can delete categories', 403);
         }
 
-        $category = category::find($id);
+        $category = Category::find($id);
 
         if (!$category) {
             return ApiResponseBuilder::error('Category not found', 404);
@@ -119,7 +119,7 @@ class CategoryService
             return ApiResponseBuilder::error('Only the Owner can delete all categories', 403);
         }
 
-        foreach (category::all() as $category) {
+        foreach (Category::all() as $category) {
             try {
                 $category->delete();
             } catch (\Throwable $exception) {

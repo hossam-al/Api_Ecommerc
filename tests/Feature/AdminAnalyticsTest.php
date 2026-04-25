@@ -7,7 +7,7 @@ use App\Models\OrderItem;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\brands;
-use App\Models\category;
+use App\Models\Category;
 use App\Models\products;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
@@ -40,7 +40,7 @@ class AdminAnalyticsTest extends TestCase
 
     protected function createCategory(string $nameEn, string $nameAr): category
     {
-        return category::create([
+        return Category::create([
             'name_en' => $nameEn,
             'name_ar' => $nameAr,
             'description_en' => $nameEn,

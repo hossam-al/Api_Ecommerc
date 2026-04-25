@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\brands;
-use App\Models\category;
+use App\Models\Category;
 use App\Models\product_variants;
 use App\Models\products;
 use App\Services\ImageUploadService;
@@ -31,7 +31,7 @@ class SellerProductWorkflowTest extends TestCase
     {
         $suffix = strtoupper(fake()->unique()->bothify('##??'));
 
-        return category::create([
+        return Category::create([
             'name_en' => 'Workflow Category ' . $suffix,
             'name_ar' => 'فئة سير العمل ' . $suffix,
             'description_en' => 'Workflow',

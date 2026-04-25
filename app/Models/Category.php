@@ -3,24 +3,33 @@
 namespace App\Models;
 
 use Database\Factories\CategoryFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class category extends Model
+class Category extends Model
 {
     use HasFactory;
+
+    protected $table = 'categories';
+
+    protected $fillable = [
+        'name_en',
+        'name_ar',
+        'description_en',
+        'description_ar',
+        'image_url',
+        'is_active',
+        'user_id',
+    ];
 
     protected static function newFactory(): CategoryFactory
     {
         return CategoryFactory::new();
     }
 
-    protected $table = "categories";
-    protected $fillable = ['name_en', 'name_ar', 'description_en', 'description_ar', 'image_url', 'is_active', 'user_id'];
-
     public function products()
     {
-        return $this->hasMany(Products::class);
+        return $this->hasMany(products::class);
     }
 
     public function user()

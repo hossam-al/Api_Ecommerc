@@ -31,7 +31,7 @@ class Cart extends Model
     // المنتج الموجود في السلة
     public function product()
     {
-        return $this->belongsTo(Products::class);
+        return $this->belongsTo(products::class);
     }
 
     public function variant()

@@ -8,7 +8,7 @@ use App\Models\ProductView;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\brands;
-use App\Models\category;
+use App\Models\Category;
 use App\Models\product_variants;
 use App\Models\products;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -32,7 +32,7 @@ class SellerDashboardTest extends TestCase
     {
         $suffix = strtoupper(fake()->unique()->bothify('##??'));
 
-        return category::create([
+        return Category::create([
             'name_en' => 'Electronics ' . $suffix,
             'name_ar' => 'الكترونيات ' . $suffix,
             'description_en' => 'Electronics',

@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Models\Order;
 use App\Models\User;
-use App\Models\category;
+use App\Models\Category;
 use App\Models\products;
 use App\Support\ApiResponseBuilder;
 use Illuminate\Http\Request;
@@ -25,7 +25,7 @@ class AnalyticsService
             'total_rejected_products' => products::rejected()->count(),
             'total_orders' => Order::count(),
             'total_revenue' => (float) Order::where('status', 'completed')->sum('total_amount'),
-            'total_categories' => category::count(),
+            'total_categories' => Category::count(),
         ]);
     }
 
@@ -124,12 +124,12 @@ class AnalyticsService
 
     public function categoriesAnalytics(): array
     {
-        $categories = category::query()->withCount('products')->orderByDesc('products_count')->get([
+        $categories = Category::query()->withCount('products')->orderByDesc('products_count')->get([
             'id', 'name_en', 'name_ar', 'is_active', 'created_at',
         ]);
 
         return ApiResponseBuilder::success('Categories analytics retrieved successfully', [
-            'totals' => ['total_categories' => category::count()],
+            'totals' => ['total_categories' => Category::count()],
             'products_per_category' => $categories,
         ]);
     }
