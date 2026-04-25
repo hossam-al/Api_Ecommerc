@@ -95,7 +95,11 @@ class AdminProductSeeder extends Seeder
 
         // Create admin products
         foreach ($adminProducts as $index => $productData) {
-            AdminProduct::create([
+            $sku = 'ADMIN' . str_pad($index + 1, 4, '0', STR_PAD_LEFT);
+
+            AdminProduct::updateOrCreate([
+                'sku' => $sku,
+            ], [
                 'name' => $productData['name'],
                 'description' => $productData['description'],
                 'price' => $productData['price'],
@@ -103,7 +107,6 @@ class AdminProductSeeder extends Seeder
                 'user_id' => $admin->id,
                 'category_id' => $productData['category_id'],
                 'image_url' => 'https://picsum.photos/400/300?random=' . ($index + 20), // Different random images
-                'sku' => 'ADMIN' . str_pad($index + 1, 4, '0', STR_PAD_LEFT),
                 'is_active' => true,
                 'is_featured' => $index < 3 // Make first 3 products featured
             ]);

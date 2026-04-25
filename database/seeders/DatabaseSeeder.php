@@ -20,47 +20,51 @@ class DatabaseSeeder extends Seeder
         $customerRole = Role::where('slug', 'customer')->first();
 
         if ($adminRole) {
-            User::firstOrCreate(
+            User::updateOrCreate(
                 ['email' => 'superadmin@example.com'],
                 [
                     'name' => 'Super Admin User',
                     'password' => Hash::make('1234678'),
                     'role_id' => $adminRole->id,
                     'phone' => '0123456788',
+                    'email_verified_at' => now(),
                 ]
             );
 
-            User::firstOrCreate(
+            User::updateOrCreate(
                 ['email' => 'admin@example.com'],
                 [
                     'name' => 'Admin User',
                     'password' => Hash::make('1234678'),
                     'role_id' => $adminRole->id,
                     'phone' => '0123456789',
+                    'email_verified_at' => now(),
                 ]
             );
         }
 
         if ($sellerRole) {
-            User::firstOrCreate(
+            User::updateOrCreate(
                 ['email' => 'seller@example.com'],
                 [
                     'name' => 'Seller User',
                     'password' => Hash::make('1234678'),
                     'role_id' => $sellerRole->id,
                     'phone' => '0123456790',
+                    'email_verified_at' => now(),
                 ]
             );
         }
 
         if ($customerRole) {
-            User::firstOrCreate(
+            User::updateOrCreate(
                 ['email' => 'customer@example.com'],
                 [
                     'name' => 'Customer User',
                     'password' => Hash::make('1234678'),
                     'role_id' => $customerRole->id,
                     'phone' => '0123456791',
+                    'email_verified_at' => now(),
                 ]
             );
         }
