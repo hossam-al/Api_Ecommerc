@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Category;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class CategorySeeder extends Seeder
@@ -23,7 +22,6 @@ class CategorySeeder extends Seeder
             return;
         }
 
-        // List of category names
         $categories = [
             'Electronics',
             'Home Appliances',
@@ -37,15 +35,17 @@ class CategorySeeder extends Seeder
             'Pet Supplies'
         ];
 
-        // Create categories
-        foreach ($categories as $index => $categoryName) {
-            Category::create([
-                'name' => $categoryName,
-                'user_id' => $superAdmin->id,
-                'description' => 'Description for ' . $categoryName . ' category',
-                // 'image_url' => 'https://picsum.photos/300/200?random=' . ($index + 1),
-                'is_active' => true,
-            ]);
+        foreach ($categories as $categoryName) {
+            Category::updateOrCreate(
+                ['name_en' => $categoryName],
+                [
+                    'name_ar' => $categoryName,
+                    'user_id' => $superAdmin->id,
+                    'description_en' => 'Description for ' . $categoryName . ' category',
+                    'description_ar' => 'Description for ' . $categoryName . ' category',
+                    'is_active' => true,
+                ]
+            );
         }
     }
 }

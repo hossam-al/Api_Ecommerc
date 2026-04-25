@@ -21,6 +21,16 @@ class DatabaseSeeder extends Seeder
 
         if ($adminRole) {
             User::firstOrCreate(
+                ['email' => 'superadmin@example.com'],
+                [
+                    'name' => 'Super Admin User',
+                    'password' => Hash::make('1234678'),
+                    'role_id' => $adminRole->id,
+                    'phone' => '0123456788',
+                ]
+            );
+
+            User::firstOrCreate(
                 ['email' => 'admin@example.com'],
                 [
                     'name' => 'Admin User',
