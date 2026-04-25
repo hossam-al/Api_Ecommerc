@@ -59,9 +59,13 @@ class AppSettingsService
             return;
         }
 
-        AppSetting::query()
+        $settings = AppSetting::query()
             ->whereIn('key', array_keys(self::SETTINGS))
             ->get()
+            ->keyBy('key');
+
+        $settings
+            ->except(['mail_scheme', 'mail_encryption'])
             ->each(function (AppSetting $setting): void {
                 $value = $this->readValue($setting);
 
@@ -73,6 +77,22 @@ class AppSettingsService
                     config([$configKey => $this->castValue($setting->key, $value)]);
                 }
             });
+
+        if ($settings->has('mail_scheme')) {
+            $value = $this->readValue($settings->get('mail_scheme'));
+
+            if ($value !== null && $value !== '') {
+                $this->applyMailScheme($value);
+            }
+        }
+
+        if ($settings->has('mail_encryption')) {
+            $value = $this->readValue($settings->get('mail_encryption'));
+
+            if ($value !== null && $value !== '') {
+                $this->applyMailEncryption($value);
+            }
+        }
     }
 
     public function set(string $key, ?string $value): AppSetting
@@ -146,6 +166,54 @@ class AppSettingsService
         return (self::SETTINGS[$key]['cast'] ?? null) === 'int'
             ? (int) $value
             : $value;
+    }
+
+    private function applyMailEncryption(string $value): void
+    {
+        $value = strtolower($value);
+
+        if (in_array($value, ['ssl', 'smtps'], true)) {
+            config([
+                'mail.mailers.smtp.scheme' => 'smtps',
+                'mail.mailers.smtp.encryption' => 'ssl',
+                'mail.mailers.smtp.require_tls' => false,
+            ]);
+            return;
+        }
+
+        if ($value === 'tls') {
+            config([
+                'mail.mailers.smtp.scheme' => 'smtp',
+                'mail.mailers.smtp.encryption' => 'tls',
+                'mail.mailers.smtp.require_tls' => true,
+            ]);
+            return;
+        }
+
+        config([
+            'mail.mailers.smtp.scheme' => 'smtp',
+            'mail.mailers.smtp.encryption' => null,
+            'mail.mailers.smtp.require_tls' => false,
+        ]);
+    }
+
+    private function applyMailScheme(string $value): void
+    {
+        $value = strtolower($value);
+
+        if ($value === 'tls') {
+            $this->applyMailEncryption('tls');
+            return;
+        }
+
+        if (in_array($value, ['ssl', 'smtps'], true)) {
+            $this->applyMailEncryption('smtps');
+            return;
+        }
+
+        config([
+            'mail.mailers.smtp.scheme' => 'smtp',
+        ]);
     }
 
     private function settingsTableExists(): bool
