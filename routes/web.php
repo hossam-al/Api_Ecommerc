@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\ReactDashboardController;
 use App\Http\Controllers\AuthController;
+use App\Services\AppSettingsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Arr;
 
 Route::get('/', function (Request $request) {
     $supportedLocales = ['en', 'ar'];
@@ -21,16 +22,40 @@ Route::get('/', function (Request $request) {
     ]);
 });
 
-Route::get('/dashboard-assets/{path}', [ReactDashboardController::class, 'static'])
-    ->where('path', '.*')
-    ->name('dashboard.static');
+$dashboardRedirect = function (Request $request, string $path = '') {
+    $baseUrl = trim((string) app(AppSettingsService::class)->get('dashboard_url'));
 
-Route::get('/login', [ReactDashboardController::class, 'index'])->name('dashboard.login');
-Route::get('/forgot-password', [ReactDashboardController::class, 'index'])->name('password.request');
-Route::get('/reset-password', [ReactDashboardController::class, 'index'])->name('password.reset');
+    if ($baseUrl === '') {
+        return response()
+            ->view('dashboard-unavailable', [], 503)
+            ->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+    }
+
+    $baseUrl = rtrim($baseUrl, '/');
+    $path = trim($path, '/');
+    $url = $baseUrl . ($path !== '' ? '/' . $path : '');
+
+    if ($request->query() !== []) {
+        $url .= '?' . Arr::query($request->query());
+    }
+
+    return redirect()->away($url);
+};
+
+Route::get('/login', fn (Request $request) => $dashboardRedirect($request, 'login'))
+    ->name('dashboard.login');
+Route::get('/forgot-password', fn (Request $request) => $dashboardRedirect($request, 'forgot-password'))
+    ->name('password.request');
+Route::get('/reset-password', fn (Request $request) => $dashboardRedirect($request, 'reset-password'))
+    ->name('password.reset');
 Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])
     ->middleware('signed')
     ->name('verification.verify');
-Route::get('/app/{path?}', [ReactDashboardController::class, 'index'])->where('path', '.*');
-Route::get('/dashboard/login', fn () => redirect()->route('dashboard.login'));
-Route::get('/dashboard/{path?}', fn () => redirect('/app/dashboard'))->where('path', '.*');
+Route::get('/app/{path?}', fn (Request $request, ?string $path = null) => $dashboardRedirect($request, $path ?? ''))
+    ->where('path', '.*');
+Route::get('/dashboard/login', fn (Request $request) => $dashboardRedirect($request, 'login'));
+Route::get('/dashboard/{path?}', function (Request $request, ?string $path = null) use ($dashboardRedirect) {
+    $dashboardPath = trim('dashboard/' . ltrim((string) $path, '/'), '/');
+
+    return $dashboardRedirect($request, $dashboardPath);
+})->where('path', '.*');

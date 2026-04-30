@@ -40,7 +40,7 @@ Artisan::command('settings:list', function () {
         ['Key', 'Value'],
         collect($service->allowedKeys())->map(fn (string $key): array => [
             $key,
-            $settings[$key] ?? '(env/default)',
+            $settings[$key] ?? '(not set)',
         ])->all(),
     );
 })->purpose('List configurable application settings');

@@ -51,6 +51,10 @@ class AppSettingsService
             'config' => ['cloudinary.cloud_url', 'filesystems.disks.cloudinary.url'],
             'secret' => true,
         ],
+        'dashboard_url' => [
+            'config' => [],
+            'secret' => false,
+        ],
     ];
 
     public function apply(): void
@@ -123,6 +127,19 @@ class AppSettingsService
         }
 
         return (bool) AppSetting::query()->where('key', $key)->delete();
+    }
+
+    public function get(string $key): ?string
+    {
+        $key = strtolower($key);
+
+        if (! array_key_exists($key, self::SETTINGS) || ! $this->settingsTableExists()) {
+            return null;
+        }
+
+        $setting = AppSetting::query()->where('key', $key)->first();
+
+        return $setting ? $this->readValue($setting) : null;
     }
 
     public function allowedKeys(): array
